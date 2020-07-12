@@ -1,0 +1,23 @@
+{ 
+  "PrjName": "Example",
+  "ToolDia": 3.0,
+  "SafeHeight": 2,
+  "CutSpeed":200,
+  "SpindleSpeed":1000,
+  "z": -3.2,
+  "passes": 5,
+  "fine": 0.3,
+  "fontZ": 0.01,
+  "Template": {
+    "TXT": [
+      { "type": "Text", "x": 10, "y": 30, "text":"ABCDEFGHI", "size": 5, "pitch":2.5, "descr":"Text" },
+      { "type": "Text", "x": 10, "y": 20, "text":"JKLMNOPQR", "size": 5, "pitch":2, "descr":"Text" },
+      { "type": "Text", "x": 10, "y": 10, "text":"STUVWXYZ", "size": 5, "pitch":3, "descr":"Text" },
+      { "type": "Text", "x": 10, "y": 0, "text":"Z0123456789-", "size": 5, "pitch":1.5, "descr":"Text" },
+      { "type": "Text", "x": 10, "y": -12, "text":"ABCDE", "size": 10, "pitch":2.5, "descr":"Text" }
+    ]
+  },
+  "DoTemplates": [
+    { "Template": "TXT", "x":  0.0, "y":  0.0, "descr":"TXT Demo" }
+  ]
+}

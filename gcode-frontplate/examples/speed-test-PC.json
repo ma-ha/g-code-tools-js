@@ -1,0 +1,20 @@
+{ 
+  "PrjName": "Speed Test (OK for Polycarbonate)",
+  "ToolDia": 3.0,
+  "SafeHeight": 3,
+  "CutSpeed":150,
+  "SpindleSpeed":1000,
+  "z": -3.2,
+  "passes": 5,
+  "fine": 0.3,
+  "Template": {
+    "TST": [
+      { "type": "Rectangle", "x":17, "y": 0, "w": 10, "h":10, "descr":"Rect"  },
+      { "type": "Circle", "x":5, "y": 0, "r":5, "descr":"Circle"  },
+      { "type": "Text", "x":25, "y": 0, "text":"ABC", "size":5, "descr":"Text"  }
+    ]
+  },
+  "DoTemplates": [
+    { "Template": "TST", "x":  0.0, "y":  0.0, "descr":"Speed Test" }
+  ]
+}

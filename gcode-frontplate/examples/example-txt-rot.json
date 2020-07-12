@@ -1,0 +1,23 @@
+{ 
+  "PrjName": "Text Rotation Example",
+  "ToolDia": 3.0,
+  "SafeHeight": 3,
+  "CutSpeed":200,
+  "SpindleSpeed":1000,
+  "z": -2.5,
+  "Template": {
+    "TextRot": [
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir":  0, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir": 30, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir": 60, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir": 90, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir": 90, "mirror": true, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir":120, "mirror": true, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir":150, "mirror": true, "descr":"Text 90° mirrored" },
+      { "type": "Text", "x":0, "y": 0, "text":" - ACBD-", "size":4, "dir":180, "mirror": true, "descr":"Text 90° mirrored" }
+    ]
+  },
+  "DoTemplates": [
+    { "Template": "TextRot", "x":  0.0, "y":  0.0, "descr":"Test" }
+  ]
+}
