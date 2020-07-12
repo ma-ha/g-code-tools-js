@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 /*
 G-Gode must be prepared by copy replace:
 - "X " > "X"
@@ -8,7 +9,12 @@ G-Gode must be prepared by copy replace:
 - "G00 Z 5.0000" > "(end)"
 - rm header and footer
 */
-
+if ( ! process.argv[2] ) {
+  console.error( 'Usage: gCodeABC.js font.gcode > font.json' )
+  console.error( '  tries to render front from G-Code export from Inkscape' )
+  console.error( '  warning: manual preprocessing and post-processing required, see JS comments' )
+  process.exit()
+}
 let fileLines = require('fs').readFileSync( process.argv[2], 'utf-8').split(/\r?\n/)
 
 let abc = { }

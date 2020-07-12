@@ -8,6 +8,8 @@ let cnc = require( './' + process.argv[2] )
 let arialN = require( './fonts/arial.json' )
 let arialS = require( './fonts/arial_small.json' )
 
+if ( ! cnc.passes && cnc.passes !== 0 ) { cnc.passes = 4 }
+if ( ! cnc.passes && cnc.passes !== 0 ) { cnc.passes = 4 }
 
 if ( ! cnc.passes && cnc.passes !== 0 ) { cnc.passes = 4 }
 if ( ! cnc.fine ) { cnc.fine = 0.5 }

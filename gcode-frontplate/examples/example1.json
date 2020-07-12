@@ -2,18 +2,27 @@
   "PrjName": "Example",
   "ToolDia": 3.0,
   "SafeHeight": 3,
-  "CutSpeed":200,
   "SpindleSpeed":1000,
   "z": -2.5,
+  "passes": 5,
+  "fine": 0.3,
   "Template": {
     "CircleAndText": [
       { "type": "Circle", "x":10, "y": 10, "r":10, "descr":"Push Button 1"  },
       { "type": "Text",   "x":-4, "y": -5, "text":"BUTTON-1", "size":4, "descr":"Text" },
       { "type": "Text",   "x":-4, "y":  4, "text":"XYZ", "size":4, "dir": 90, "descr":"Text 90°" },
-      { "type": "Text",   "x":27, "y": 15, "text":"ABC", "size":4, "dir": 90, "mirror": true, "descr":"Text 90° mirrored" }
+      { "type": "Text",   "x":27, "y": 15, "text":"ABC", "size":4, "dir": 90, "mirror": true, "descr":"Text 90° mirrored" },
+      { "type": "Rectangle", "x":10, "y":25, "w":30, "h":10 }
+    ],
+    "Screws": [
+      { "type": "Drill", "x":  0, "y": 30, "descr":"Screw Top"  },
+      { "type": "Drill", "x":  0, "y":-10, "descr":"Screw Bottom"  }
     ]
   },
   "DoTemplates": [
-    { "Template": "CircleAndText", "x":  0.0, "y":  0.0, "descr":"Test" }
+    { "Template": "Screws",        "x":  0.0, "y":  0.0, "descr":"4 Screws" },
+    { "Template": "CircleAndText", "x": 15.0, "y":  0.0, "descr":"1st Test" },
+    { "Template": "CircleAndText", "x": 65.0, "y":  0.0, "descr":"2nd Test" },
+    { "Template": "Screws",        "x":100.0, "y":  0.0, "descr":"4 Screws" }
   ]
 }

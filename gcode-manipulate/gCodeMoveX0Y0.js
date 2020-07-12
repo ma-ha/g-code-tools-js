@@ -1,3 +1,9 @@
+#!/usr/local/bin/node
+if ( ! process.argv[2] ) {
+  console.error( 'Usage: gCodeMoveX0Y0.js in-file.gcode > out-file.json' )
+  console.error( '  moves everything, so that it starts at x=0 upwards and y=0 rightwards' )
+  process.exit()
+}
 let fileLines = require('fs').readFileSync( process.argv[2], 'utf-8').split(/\r?\n/)
 
 let xMin = 10000
