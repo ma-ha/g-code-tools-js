@@ -1,0 +1,40 @@
+{
+	"name": "gcode-gen",
+	"version": "1.0.0",
+	"description": "Ganerate G-Code from JSON input",
+	"author": "ma-ha",
+	"license": "MIT",
+	"main": "gcode-gen.js",
+	"scripts": {
+		"test": "echo \"Ref mocha/README.md\" && exit 1"
+	},
+	"keywords": [
+		"G-Code",
+		"gcode",
+		"CNC",
+		"JSON",
+		"engraving",
+		"CNC3018",
+		"GRBL",
+		"milling"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ma-ha/g-code-tools-js"
+	},
+	"dependencies": {
+	},
+	"files": [
+		"README.md",
+		"gcode-gen.js"
+  ],
+  "bin": {
+		"gcode-gen": "./gcode-gen.js"
+  },
+	"directories": {
+    "example": "examples"
+  },
+	"engines": {
+		"node": ">= 10.12.0"
+	}
+}
