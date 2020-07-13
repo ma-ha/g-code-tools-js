@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 if ( ! process.argv[2] ) {
-  console.error( 'Usage: gode-gen.js input.json > output.gcode' )
+  console.error( 'Usage: gcode-gen.js input.json > output.gcode' )
   console.error( ' JSON input examples, see:' )
   console.error( ' https://github.com/ma-ha/g-code-tools-js/tree/master/gcode-frontplate/examples' )
   process.exit()
 }
 
+const fs = require( 'fs' )
+
 let cnc = null
 try {
-  cnc = require( './' + process.argv[2] )
+  cnc = JSON.parse( fs.readFileSync( process.argv[2], 'utf8' ) )
 } catch ( exc ) {
   console.error( exc.message )
   console.error( ' JSON input examples, see:' )

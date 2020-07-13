@@ -30,7 +30,7 @@ You must remove it from the output if you want a different behavior.
 
 Example:
 
-    gode-gen examples/A-Z0-9.json > examples/A-Z0-9.gcode 
+    gcode-gen examples/A-Z0-9.json > examples/A-Z0-9.gcode 
 
 ## 2nd step: Double check the G-Code output
 
@@ -116,7 +116,7 @@ The "text can be capital letters, numbers, space and a "-". Text can be rotated 
     }
 
 You can modify, extend the fonts or create your own fonts: 
-Clone the repo locally and edit `gode-gen.js` and modify the functions `initArialNormal` or `initArialSmall`.
+Clone the repo locally and edit `gcode-gen.js` and modify the functions `initArialNormal` or `initArialSmall`.
 You can use the [gCodeABC.js](https://github.com/ma-ha/g-code-tools-js/blob/master/gcode-manipulate/gCodeABC.js) 
 helper script to generate fonts from an Inkscape G-Code export.
  
