@@ -1,3 +1,5 @@
+![example](example.png) 
+
 # G-Code Generator
 
 Utility to create G-Code for drilling, milling and text engraving from a simple JSON input file.

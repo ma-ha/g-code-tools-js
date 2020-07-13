@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 if ( ! process.argv[2] ) {
-  console.error( 'Usage: gcode-gen.js input.json > output.gcode' )
-  console.error( ' JSON input examples, see:' )
-  console.error( ' https://github.com/ma-ha/g-code-tools-js/tree/master/gcode-frontplate/examples' )
+  printErrorAndHelpLink( new Error( 'Usage: gcode-gen.js input.json > output.gcode' ) )
   process.exit()
 }
 
@@ -12,9 +10,7 @@ let cnc = null
 try {
   cnc = JSON.parse( fs.readFileSync( process.argv[2], 'utf8' ) )
 } catch ( exc ) {
-  console.error( exc.message )
-  console.error( ' JSON input examples, see:' )
-  console.error( ' https://github.com/ma-ha/g-code-tools-js/tree/master/gcode-frontplate/examples' )
+  printErrorAndHelpLink( exc )
   process.exit()
 }
 
@@ -124,15 +120,9 @@ function doGCodeForTemplate( spec ) {
             // TODO
             break
         }
-      } catch ( exc ) { 
-        console.log( '(ERROR: '+exc.message+')' ) 
-        console.error( '(ERROR: '+exc.message+')' ) 
-      }
+      } catch ( exc ) { printErrorAndHelpLink( exc ) }
     }
-  } catch ( exc ) { 
-    console.log( '(ERROR: '+exc.message+')' ) 
-    console.error( '(ERROR: '+exc.message+')' ) 
-  }
+  } catch ( exc ) { printErrorAndHelpLink( exc ) }
 }
 
 
@@ -355,6 +345,12 @@ function s( val, scale ) {
   return Math.round( ( val * scale ) * 1000 ) / 1000
 }
 
+// ----------------------------------------------------
+function printErrorAndHelpLink( exc ) {
+  console.error( exc.message )
+  console.error( ' JSON input examples, see:' )
+  console.error( ' https://github.com/ma-ha/g-code-tools-js/tree/master/gcode-frontplate/examples' )
+}
 // ============================================================================
 /** Arial Outline Font */
 function initArialNormal() {

@@ -1,6 +1,6 @@
 {
 	"name": "gcode-gen",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Ganerate G-Code from JSON input",
 	"author": "ma-ha",
 	"license": "MIT",
