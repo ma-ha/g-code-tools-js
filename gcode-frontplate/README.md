@@ -19,7 +19,7 @@ I.e. have a look at `M3`/`M5`/`G2`/`G21`/`G92`/`G0`/`G1`/`G2`/`G3`
 
 # Installation
 
-    npm install --global gcode-gen
+    sudo npm install --global gcode-gen
 
 # How To Use
 

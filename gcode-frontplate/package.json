@@ -1,13 +1,10 @@
 {
 	"name": "gcode-gen",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Ganerate G-Code from JSON input",
 	"author": "ma-ha",
 	"license": "MIT",
 	"main": "gcode-gen.js",
-	"scripts": {
-		"test": "echo \"Ref mocha/README.md\" && exit 1"
-	},
 	"keywords": [
 		"G-Code",
 		"gcode",
