@@ -50,7 +50,7 @@ console.log('G0 Z0')
 // ----------------------------------------------------------------------------
 function doGCodeForTemplate( spec ) {
   console.log( '\n( --------------------------------------------- )' )
-  console.log( '( '+spec.descr+' )' )
+  console.log( '( '+spec.descr+' y='+spec.x+' y='+spec.y+'  )' )
   try {
     let templateSpec = cnc.Template[ spec.Template ]
     for ( let element of templateSpec ) {
@@ -61,17 +61,19 @@ function doGCodeForTemplate( spec ) {
             console.log( `\n( ${spec.descr} > ${element.descr}: ${element.type} r=${element.r} mm )` )
             genGCodeCircle( 
               element.r,
-              element.x + spec.x,
-              element.y + spec.y,
-              mainToolRadius
+              (element.x ? element.x : 0) + spec.x,
+              (element.y ? element.y : 0) + spec.y,              
+              mainToolRadius,
+              element.passes,
+              element.z
             )
             break
 
           case 'Rectangle': 
             console.log( `\n( ${spec.descr} > ${element.descr}: ${element.type} ${element.w} mm x ${element.h} mm)` )
             genGCodeRectangle( 
-              element.x + spec.x,
-              element.y + spec.y,
+              (element.x ? element.x : 0) + spec.x,
+              (element.y ? element.y : 0) + spec.y,
               element.w,
               element.h,
               mainToolRadius
@@ -81,8 +83,8 @@ function doGCodeForTemplate( spec ) {
           case 'Template': 
             doGCodeForTemplate({
               Template : element.Template,
-              x : element.x + spec.x,
-              y : element.y + spec.y,
+              x :  (element.x ? element.x : 0) + spec.x,
+              y : (element.y ? element.y : 0) + spec.y,
               descr : element.descr
             })
             break
@@ -90,12 +92,12 @@ function doGCodeForTemplate( spec ) {
           case 'Drill':
             console.log( `\n( ${spec.descr} > ${element.descr}: ${element.type} )` )
             genGCodeDrill(
-              element.x + spec.x,
-              element.y + spec.y,
+              (element.x ? element.x : 0) + spec.x,
+              (element.y ? element.y : 0) + spec.y,
             )
             break
 
-            case 'Text':
+          case 'Text':
               console.log( `\n( ${spec.descr} > ${element.descr}: Text "${element.text}" )` )
               let options = {}
               if ( element.dir    ) { options.rot    = element.dir }
@@ -104,8 +106,8 @@ function doGCodeForTemplate( spec ) {
               gCodeText(
                 element.text,
                 element.size,
-                element.x + spec.x,
-                element.y + spec.y,
+                (element.x ? element.x : 0) + spec.x,
+                (element.y ? element.y : 0) + spec.y,
                 options
               )
               break
@@ -113,6 +115,10 @@ function doGCodeForTemplate( spec ) {
             // case 'Line': 
               // TODO
               // break
+              
+            case 'xxCircle': 
+              // do nothing
+              break
 
           default: 
             console.error( `\n( ERR, type "${element.type}" unknown, ${spec.descr} > ${element.descr})` )
@@ -135,50 +141,58 @@ function genGCodeDrill( x, y ) {
 }
 
 // ----------------------------------------------------------------------------
-function genGCodeCircle( r, x, y, rTool ) {
+function genGCodeCircle( r, x, y, rTool, ePasses, eZ ) {
   if ( r < rTool ) { return console.log('(ERROR: radius too small fro tool)')}
+  let cncPasses = ( ePasses ? ePasses : cnc.passes )
+  let cncZ = ( eZ ? eZ : cnc.z )
   let smallCircle = false
   if ( r <= rTool + cnc.fine ) { smallCircle = true }
   
   if ( smallCircle  ) {
     let r1 = r - rTool 
     console.log( `(small circle at ${x} ${y} )`)
-    console.log( `G01 F${(cnc.CutSpeed?cnc.CutSpeed:200)} (set speed)`)
+    console.log( `G1 F${(cnc.CutSpeed?cnc.CutSpeed:200)} (set speed)`)
     console.log( `G0 X${v(x)} Y${v(y)}`)
-    for ( let i = 1; i <= cnc.passes; i++ ) { 
-      let z = cnc.z / cnc.passes * i
-      console.log( `G1 Z${z}`)
+    console.log( `G0 Z0`)
+    for ( let i = 1; i <= cncPasses; i++ ) { 
+      let z = cncZ / cncPasses * i
       console.log( `G1 X${v(x-r1)} Y${v(y)}`)
-      console.log( `G1 Z${cnc.z}`)
-      console.log( `G3 X${v(x+r1)} Y${v(y)} I${v(r1)} J${v(0)}`)
-      console.log( `G3 X${v(x-r1)} Y${v(y)} I${v(-r1)} J${v(0)}`)
+      console.log( `G3 X${v(x+r1)} Y${v(y)} I${v(r1)} J0 Z${z}`)
+      console.log( `G3 X${v(x-r1)} Y${v(y)} I${v(-r1)} J0`)
     }
-  } else {
+    console.log( `G3 X${v(x+r1)} Y${v(y)} I${v(r1)} J0`)
+    console.log( `G3 X${v(x-r1)} Y${v(y)} I${v(-r1)} J0`)
+} else {
     console.log( `(circle at ${x} ${y} )`)
     console.log( `G01 F${(cnc.CutSpeed?cnc.CutSpeed:200)} (set speed)`)
     let r1 = r - rTool - cnc.fine
-    console.log( `( r1=${r1} )`)
     console.log( `G0 X${v(x-r1)} Y${v(y)}`)
-    for ( let i = 1; i <= cnc.passes; i++ ) { 
-      let z = cnc.z / cnc.passes * i
-      console.log( `G1 Z${z}`)
+    console.log( `G0 Z0` )
+    console.log( `( r1=${r1} )`)
+    for ( let i = 1; i <= cncPasses; i++ ) { 
+      let z = cncZ / cncPasses * i
+      // console.log( `G1 Z${z}`)
       console.log( `G1 X${v(x-r1)} Y${v(y)}`)
-      console.log( `G3 X${v(x+r1)} Y${v(y)} I${v(r1)} J${v(0)}`)
-      console.log( `G3 X${v(x-r1)} Y${v(y)} I${v(-r1)} J${v(0)}`)
+      console.log( `G3 X${v(x+r1)} Y${v(y)} I${v(r1)} J0 Z${z}`)
+      console.log( `G3 X${v(x-r1)} Y${v(y)} I${v(-r1)} J0`)
     }
     // fine cut 
     let r2 = r - rTool
     console.log( `( r2=${r2} )`)
     console.log( `G1 X${v(x-r2)} Y${v(y)}`)
-    console.log( `G3 X${v(x+r2)} Y${v(y)} I${v(r2)} J${v(0)}`)
-    console.log( `G3 X${v(x-r2)} Y${v(y)} I${v(-r2)} J${v(0)}`)      
+    console.log( `G3 X${v(x+r2)} Y${v(y)} I${v(r2)} J0`)
+    console.log( `G3 X${v(x-r2)} Y${v(y)} I${v(-r2)} J0`)      
+    console.log( `G3 X${v(x+r2)} Y${v(y)} I${v(r2)} J0`)
+    console.log( `G3 X${v(x-r2)} Y${v(y)} I${v(-r2)} J0`)      
   }
-  toSafetyHeight()
+  toSafetyHeight( x, y )
 }
 
 // ----------------------------------------------------------------------------
-function genGCodeRectangle( x, y, w, h, rTool ) {
+function genGCodeRectangle( x, y, w, h, rTool, ePasses, eZ ) {
   console.log( `G01 F${(cnc.CutSpeed?cnc.CutSpeed:200)} (set speed)`)
+  let cncPasses = ( ePasses ? ePasses : cnc.passes )
+  let cncZ = ( eZ ? eZ : cnc.z )
   if ( w < 2 * rTool ) {
     console.error('(ERROR: rectangle w too small for tool)') 
     return console.log('(ERROR: rectangle w too small for tool)')
@@ -192,10 +206,10 @@ function genGCodeRectangle( x, y, w, h, rTool ) {
   if ( h <= 2 * rTool + 1 ) { small = true }
   if ( small ) {
     console.log('(small)')
-    console.log( `G1 X${v( x )} Y${v( y )}`)
+    console.log( `G0 X${v( x )} Y${v( y )}`)
     console.log( `G0 Z0.0`)
-    for ( let i = 1; i <= cnc.passes; i++ ) { 
-      let z = cnc.z / cnc.passes * i
+    for ( let i = 1; i <= cncPasses; i++ ) { 
+      let z = cncZ / cncPasses * i
       console.log( `G1 Z${v(z)}`)
       let dX = w/2 - rTool 
       let dY = h/2 - rTool 
@@ -205,25 +219,30 @@ function genGCodeRectangle( x, y, w, h, rTool ) {
     // rough cut 
     let dX = w/2 - rTool - cnc.fine
     let dY = h/2 - rTool - cnc.fine
-    console.log( `G1 X${v( x - dX + 1 )} Y${v( y - dY + 1 )}`)
+    console.log( `G0 X${v( x - dX )} Y${v( y - dY )}`)
     console.log( `G0 Z0.0`)
-    for ( let i = 1; i <= cnc.passes; i++ ) { 
-      let z = cnc.z / cnc.passes * i
-      console.log( `G1 Z${v(z)}`)
-      g1Rect( x, y, dX, dY )
+    for ( let i = 1; i <= cncPasses; i++ ) { 
+      let z = cncZ / cncPasses * i
+      //console.log( `G1 `)
+      g1Rect( x, y, dX, dY, z )
     }
     console.log( `( fine finish )`)
     // fine cut 
     dX = w/2 - rTool
     dY = h/2 - rTool
+    console.log( `G1 X${v( x - dX )} Y${v( y - dY )}`)
+    g1Rect( x, y, dX, dY )
     g1Rect( x, y, dX, dY )
   }
-  toSafetyHeight()
+  toSafetyHeight( x, y )
 }
 
-function g1Rect( x, y, dX, dY ) {
-  console.log( `G1 X${v( x - dX )} Y${v( y - dY )}`)
-  console.log( `G1 X${v( x + dX )} Y${v( y - dY )}`)
+function g1Rect( x, y, dX, dY, z ) {
+  if ( z ) {
+    console.log( `G1 X${v( x + dX )} Y${v( y - dY )} Z${v(z)}`)
+  } else {
+    console.log( `G1 X${v( x + dX )} Y${v( y - dY )}`)
+  }
   console.log( `G1 X${v( x + dX )} Y${v( y + dY )}`)
   console.log( `G1 X${v( x - dX )} Y${v( y + dY )}`)
   console.log( `G1 X${v( x - dX )} Y${v( y - dY )}`)
@@ -330,8 +349,12 @@ function rot( x, y, deg ) {
 
 // ============================================================================
 // helper 
-function toSafetyHeight() {
-  console.log('G0 Z'+ ( cnc.SafeHeight ? cnc.SafeHeight : '5.0') +' (safety height)')
+function toSafetyHeight( x, y ) {
+  if ( x && y ) {
+    console.log(`G0 X${x} Y${y} Z${ cnc.SafeHeight ? cnc.SafeHeight : '5.0'} (safety height)`)
+  } else {
+    console.log('G0 Z'+ ( cnc.SafeHeight ? cnc.SafeHeight : '5.0') +' (safety height)')
+  }
 }
 
 function v( val ) {
